@@ -1,0 +1,4 @@
+coverage==6.4
+mock==4.0.3
+pytest==7.1.1
+pytest-cov==3.0.0
