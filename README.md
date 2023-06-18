@@ -20,7 +20,9 @@ docker-compose up
 docker-compose up -d # Run as Daemon
 ```
 
-**Note**: The first time you start your stack, it might take a minute for it to be ready as the backend waits for the database to be ready and configures everything. You can check the logs to monitor it.
+**Note**:
+- The first time you start your stack, it might take a minute for it to be ready as the backend waits for the database to be ready and configures everything. You can check the logs to monitor it.
+- Don't forget to setup the two `.env` files. One for `docker-compose.yml`, the other for the app itself. Use the examples.
 
 Once started you can use teh following:
 
