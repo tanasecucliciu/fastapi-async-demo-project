@@ -3,10 +3,67 @@
 Welcome to the FastApi Async Freelancing Project. Below you will find helpful instructions on how to setup the project.
 
 **Contents**
-- How to setup App
-- How to start the app
+- Quick setup & start using docker-compose
+- How to setup App manually
+- How to start the app manually
 
-# How to setup App
+# Quick setup & start using docker-compose
+
+## Setup
+
+This app supports docker-compose for local development. For deployment, we will be using Kubernetes.
+
+To start the stack with Docker Compose:
+
+```
+docker-compose up
+docker-compose up -d # Run as Daemon
+```
+
+**Note**: The first time you start your stack, it might take a minute for it to be ready as the backend waits for the database to be ready and configures everything. You can check the logs to monitor it.
+
+Once started you can use teh following:
+
+- Frontend, built with Docker, with routes handled based on the path: http://localhost:8080
+- Automatic interactive documentation with Swagger UI (from the OpenAPI backend): http://localhost:8080/docs
+- PGAdmin, PostgreSQL web administration: http://localhost:5050
+
+
+To check the logs, run:
+
+```
+docker-compose logs
+```
+
+To check the logs of a specific service, add the name of the service, e.g.:
+
+```
+docker-compose logs backend
+```
+
+If you want to start an interactive session in the backend container:
+
+```
+docker-compose exec backend bash
+```
+
+If you want to rebuild do:
+
+```
+docker-compose up --build
+```
+
+## Development
+
+Developing using this configuration is easy because the directory with the backend code is mounted as a Docker "host volume", mapping the code you change live to the directory inside the container. That allows you to test your changes right away, without having to build the Docker image again. This should only be done during development. For production, you should build the Docker image with a recent version of the backend code. However, during development, it allows you to iterate very quickly.
+
+Additionally, as opposed to running in production, this way of running the container starts a single server process (instead of multiple, as would be for production) and reloads the process whenever the code changes. Keep in mind that if you have a syntax error and save the Python file, it will break and exit, and the container will stop. After that, you can restart the container by fixing the error and running again.
+
+There is also a commented-out command override. You can uncomment it and comment the default one. It makes the backend container run a process that does "nothing", but keeps the container alive. This allows you to get inside your running container and execute commands inside.
+
+# How to setup App Manually
+
+We recommend you use docker-compose but if for some reason you need to setup the app manually, this is the guide.
 
 Follow the below guides in order to setup the application.
 
@@ -129,7 +186,7 @@ In the "Connection" tab, enter the following details:
 - Password: The password for the PostgreSQL user.
 
 
-# How to start the app
+# How to start the app manually
 
 This part assumes you've gone through the app setup process. To start the app, activate your Python environment and run the `start.sh` script in the root folder.
 
