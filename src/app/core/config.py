@@ -11,10 +11,10 @@ class Settings(BaseSettings):
     DEBUG_MODE: bool = False
 
     # Database
-    DB_HOST: str = "localhost:5432"
-    DB_USER: str = "postgres"
-    DB_PASS: str = ""
-    DB_NAME: str = "app"
+    POSTGRES_SERVER: str = "localhost:5432"
+    POSTGRES_USER: str = "postgres"
+    POSTGRES_PASSWORD: str = ""
+    POSTGRES_DB: str = "app"
     DB_URI: Optional[PostgresDsn] = None
     DB_ASYNC_URI: Optional[PostgresDsn] = None
 
@@ -34,10 +34,24 @@ class Settings(BaseSettings):
 
         return PostgresDsn.build(
             scheme="postgresql+asyncpg",
-            host=values.get("DB_HOST"),
-            user=values.get("DB_USER"),
-            password=values.get("DB_PASS"),
-            path=f'/{values.get("DB_NAME", "")}',
+            host=values.get("POSTGRES_SERVER"),
+            user=values.get("POSTGRES_USER"),
+            password=values.get("POSTGRES_PASSWORD"),
+            path=f'/{values.get("POSTGRES_DB", "")}',
+        )
+
+    # pylint: disable=no-self-argument
+    @validator("DB_URI", pre=True)
+    def assemble_db_uri(cls, value: Optional[str], values: Dict[str, Any]) -> PostgresDsn:
+        if isinstance(value, str):
+            return value
+
+        return PostgresDsn.build(
+            scheme="postgresql",
+            host=values.get("POSTGRES_SERVER"),
+            user=values.get("POSTGRES_USER"),
+            password=values.get("POSTGRES_PASSWORD"),
+            path=f'/{values.get("POSTGRES_DB", "")}',
         )
 
 

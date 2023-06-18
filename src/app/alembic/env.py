@@ -31,10 +31,10 @@ target_metadata = Base.metadata  # pylint: disable=no-name-in-module,no-member
 
 
 def get_url() -> str:
-    host = os.getenv("DB_HOST")
-    user = os.getenv("DB_USER")
-    password = os.getenv("DB_PASS")
-    db = os.getenv("DB_NAME", "")
+    host = os.getenv("POSTGRES_SERVER")
+    user = os.getenv("POSTGRES_USER")
+    password = os.getenv("POSTGRES_PASSWORD")
+    db = os.getenv("POSTGRES_DB", "")
     return f"postgresql://{user}:{password}@{host}/{db}"
 
 

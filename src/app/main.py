@@ -18,7 +18,7 @@ async def root() -> str:
     return """
         <html>
             <body>
-                <p>Welcome to DeepOpinion Challenge! Go to <a href="http://localhost:5050/docs">docs</a></p>
+                <p>Welcome to FastAPI Async Demo! Go to <a href="http://localhost:8080/docs">docs</a></p>
             </body>
         </html>
     """

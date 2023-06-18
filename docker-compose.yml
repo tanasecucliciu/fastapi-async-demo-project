@@ -1,0 +1,47 @@
+version: "3.3"
+services:
+  db:
+    image: postgres:12
+    volumes:
+      - app-db-data:/var/lib/postgresql/data/pgdata
+    env_file:
+      - src/app/.env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+
+  pgadmin:
+    ports:
+        - "5050:5050"
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    env_file:
+      - src/app/.env
+
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+
+  backend:
+    ports:
+        - "8080:80"
+    volumes:
+        - ./src/app:/app
+    environment:
+      - DEV_MODE=true
+      - SERVER_HOST=http://${DOMAIN?Variable not set}
+    image: '${DOCKER_IMAGE?Variable not set}:${DOCKER_TAG-latest}'
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - src/app/.env
+    build:
+      context: .
+      dockerfile: dist/app/app.Dockerfile
+     # command: bash -c "while true; do sleep 1; done"  # Infinite loop to keep container live doing nothing
+    command: /start.sh
+
+volumes:
+  app-db-data:
