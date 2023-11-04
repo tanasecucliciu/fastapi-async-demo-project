@@ -18,7 +18,9 @@ async def root() -> str:
     return """
         <html>
             <body>
-                <p>Welcome to FastAPI Async Demo! Go to <a href="http://localhost:8080/docs">docs</a></p>
+                <p>Welcome to FastAPI Async Demo!</p>
+                <p>For SwaggerUI go to <a href="http://localhost:8080/docs">docs</a></p>
+                <p>For PGAdmin go <a href="http://localhost:5050">here</a></p>
             </body>
         </html>
     """

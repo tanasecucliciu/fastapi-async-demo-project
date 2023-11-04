@@ -21,9 +21,6 @@ class Base(DeclarativeBase):
 
     metadata = MetaData(naming_convention=convention)
 
-    id: Mapped[int] = mapped_column(
-        "id", autoincrement=True, nullable=False, unique=True, primary_key=True
-    )
     created_at: Mapped[datetime.datetime] = mapped_column(
         "created_at", server_default=func.now(), nullable=False
     )

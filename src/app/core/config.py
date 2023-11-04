@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
     REDIS_DB: int = 0
     REDIS_TTL: int = 60
+    REDIS_URI: Optional[str] = None
 
     # pylint: disable=no-self-argument
     @validator("DB_ASYNC_URI", pre=True)
@@ -52,6 +53,14 @@ class Settings(BaseSettings):
             user=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
             path=f'/{values.get("POSTGRES_DB", "")}',
+        )
+
+    @validator('REDIS_URI', pre=True)
+    def assemble_redis_uri(cls, value: Optional[str], values: Dict[str, Any]) -> str:
+        if isinstance(value, str):
+            return value
+        return (
+            f"redis://{values['REDIS_HOST']}:{values['REDIS_PORT']}/{values['REDIS_DB']}"
         )
 
 

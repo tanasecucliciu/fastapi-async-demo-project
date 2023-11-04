@@ -5,4 +5,7 @@ from app.models.base import Base
 
 
 class User(Base):
-    email: Mapped[str] = mapped_column("title", String(length=64), nullable=False)
+    id: Mapped[int] = mapped_column(
+        "id", autoincrement=True, nullable=False, unique=True, primary_key=True
+    )
+    email: Mapped[str] = mapped_column("email", String(length=64), nullable=False)

@@ -1,37 +1,50 @@
-from typing import Annotated, AsyncIterator, Generator
+from typing import Annotated, AsyncGenerator, Generator
 
-import aioredis
 from fastapi import Depends
+from redis import asyncio as aioredis
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
-from app.core.config import settings
-from app.db.session import SessionLocal, async_session
+from app.db.session import (
+    async_session_factory,
+    get_redis_session,
+    sync_session_factory,
+)
 
 
-def get_db() -> Generator[SessionLocal, None, None]:
+# Session generators
+def get_sync_db_session() -> Generator[Session, None, None]:
     try:
-        db = SessionLocal()
-        yield db
+        session = sync_session_factory()
+        yield session
+    except SQLAlchemyError as e:
+        print(f"Sync Session Exception: {e}")
     finally:
-        db.close()
+        session.close()
 
 
-async def get_redis() -> aioredis.Redis:
-    redis = await aioredis.from_url(
-        f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}"
-    )
+async def get_async_db_session() -> AsyncGenerator[AsyncSession, None]:
     try:
-        yield redis
-    finally:
-        await redis.close()
-
-
-async def get_session() -> AsyncIterator[async_sessionmaker]:
-    try:
-        yield async_session
+        session = async_session_factory()
+        yield session
     except SQLAlchemyError as e:
         print(f"Async Session Exception: {e}")
+    finally:
+        await session.close()
 
 
-AsyncSession = Annotated[async_sessionmaker, Depends(get_session)]
+async def get_async_redis_session() -> Generator[aioredis.Redis, None, None]:  # type: ignore
+    try:
+        session = await get_redis_session()
+        yield session
+    except aioredis.RedisError as e:
+        print(f"Redis Session Exception: {e}")
+    finally:
+        await session.aclose()
+
+
+# Session dependencies
+sync_session = Annotated[Session, Depends(get_sync_db_session)]
+async_session = Annotated[AsyncSession, Depends(get_async_db_session)]
+redis_async_session = Annotated[aioredis.Redis, Depends(get_async_redis_session)]

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -19,19 +20,16 @@ class UserUpdate(UserBase):
 
 
 # Properties shared by models stored in DB
-class UserInDBBase(UserBase):
+class UserInDB(UserBase):
     id: int
     email: Optional[str]
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
 
 
 # Properties to return to client
-class User(UserInDBBase):
-    pass
-
-
-# Properties properties stored in DB
-class UserInDB(UserInDBBase):
+class User(UserInDB):
     pass
