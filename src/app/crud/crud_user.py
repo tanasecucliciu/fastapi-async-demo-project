@@ -4,7 +4,13 @@ from app.schemas.user import UserCreate, UserUpdate
 
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
-    pass
+    """
+    Class for CRUD operations on the User model.
+
+    Attributes:
+        model (Type[User]): The User SQLAlchemy model.
+
+    """
 
 
 users = CRUDUser(User)

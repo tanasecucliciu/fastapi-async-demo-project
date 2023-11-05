@@ -19,11 +19,22 @@ async def read_users(
     limit: int = 100,
 ) -> Any:
     """
-    Retrieve users.
+    Retrieve a list of users.
+
+    Args:
+        db (AsyncSession): The asynchronous SQLAlchemy session.
+        redis (aioredis.Redis): The asynchronous Redis session.
+        skip (int, optional): The number of users to skip. Defaults to 0.
+        limit (int, optional): The maximum number of users to return. Defaults to 100.
+
+    Returns:
+        Any: A list of user objects.
+
     """
     users = []
     tag = "user_list"
     item_id = f"{tag}_{skip}:{limit}"
+    # Load user from cache
     users_bytes = await redis.get(item_id)
     if users_bytes is not None:
         users = json.loads(users_bytes.decode("utf-8"))
@@ -47,7 +58,19 @@ async def create_user(
     obj_in: schemas.UserCreate,
 ) -> Any:
     """
-    Create new user.
+    Create a new user.
+
+    Args:
+        db (AsyncSession): The asynchronous SQLAlchemy session.
+        redis (aioredis.Redis): The asynchronous Redis session.
+        obj_in (UserCreate): The user object to create.
+
+    Returns:
+        Any: The created user object.
+
+    Raises:
+        HTTPException: If the user cannot be created.
+
     """
     invalidate_tags = ["user_list"]
     user = await crud.users.create(db=db, obj_in=obj_in)
@@ -67,7 +90,20 @@ async def update_user(
     obj_in: schemas.UserUpdate,
 ) -> Any:
     """
-    Update an user.
+    Update an existing user.
+
+    Args:
+        db (AsyncSession): The asynchronous SQLAlchemy session.
+        id (int): The ID of the user to update.
+        redis (aioredis.Redis): The asynchronous Redis session.
+        obj_in (UserUpdate): The updated user object.
+
+    Returns:
+        Any: The updated user object.
+
+    Raises:
+        HTTPException: If the user cannot be found.
+
     """
     invalidate_tags = ["user_list", "user_get"]
     user = await crud.users.update(db=db, id=id, obj_in=obj_in)
@@ -86,12 +122,25 @@ async def read_user(
     id: int,
 ) -> Any:
     """
-    Get user by ID.
+    Get a user by ID.
+
+    Args:
+        db (AsyncSession): The asynchronous SQLAlchemy session.
+        redis (aioredis.Redis): The asynchronous Redis session.
+        id (int): The ID of the user to retrieve.
+
+    Returns:
+        Any: The user object.
+
+    Raises:
+        HTTPException: If the user cannot be found.
+
     """
     tag = "user_get"
     item_id = f"{tag}_{id}"
     user = await redis.get(item_id)
     if user:
+        # Load user from cache
         return json.loads(user.decode("utf-8"))
     user = await crud.users.get(db=db, id=id)
     if not user:
@@ -108,7 +157,19 @@ async def delete_user(
     *, db: deps.async_session, redis: deps.redis_async_session, id: int
 ) -> Any:
     """
-    Delete an user.
+    Delete a user by ID.
+
+    Args:
+        db (AsyncSession): The asynchronous SQLAlchemy session.
+        redis (aioredis.Redis): The asynchronous Redis session.
+        id (int): The ID of the user to delete.
+
+    Returns:
+        Any: The deleted user object.
+
+    Raises:
+        HTTPException: If the user cannot be found.
+
     """
     invalidate_tags = ["user_list", "user_get"]
     user = await crud.users.remove(db=db, id=id)

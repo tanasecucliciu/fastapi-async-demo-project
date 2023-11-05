@@ -6,6 +6,7 @@ Welcome to the FastAPI Async Demo Project. Below, you will find helpful instruct
 - Quick setup & start using docker-compose
 - How to set up App manually
 - How to start the App manually
+- Acknowledgements
 
 # Quick setup & start using docker-compose
 
@@ -193,3 +194,11 @@ This part assumes you've gone through the app set up process. To start the app, 
 
 - Navigate to http://localhost:5050.
 - For Swagger Docs to http://localhost:5050/docs.
+
+
+# Acknowledgements
+
+This project was inspired by the "full-stack-fastapi-postgresql" project by Sebastián Ramírez (tiangolo), available at:
+https://github.com/tiangolo/full-stack-fastapi-postgresql
+
+Parts of the code were based on or directly used from this project. I am thankful to tiangolo for his contributions to the open-source community.

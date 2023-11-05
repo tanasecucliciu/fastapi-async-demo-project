@@ -6,21 +6,39 @@ from pydantic import BaseModel
 
 # Shared properties
 class UserBase(BaseModel):
+    """
+    Base Pydantic model for user properties.
+
+    """
+
     email: Optional[str] = None
 
 
 # Properties to receive on aspect creation
 class UserCreate(UserBase):
+    """
+    Pydantic model for creating a user.
+
+    """
+
     email: str
 
 
 # Properties to receive on aspect update
 class UserUpdate(UserBase):
-    pass
+    """
+    Pydantic model for updating a user.
+
+    """
 
 
 # Properties shared by models stored in DB
 class UserInDB(UserBase):
+    """
+    Pydantic model representing user stored in the database.
+
+    """
+
     id: int
     email: Optional[str]
     created_at: datetime
@@ -32,4 +50,7 @@ class UserInDB(UserBase):
 
 # Properties to return to client
 class User(UserInDB):
-    pass
+    """
+    Pydantic model for returning user properties to the client.
+
+    """

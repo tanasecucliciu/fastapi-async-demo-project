@@ -22,4 +22,11 @@ async_session_factory = async_sessionmaker(
 
 
 async def get_redis_session() -> aioredis.Redis:  # type: ignore
+    """
+    Get a Redis session.
+
+    Returns:
+        aioredis.Redis: The Redis session.
+
+    """
     return await aioredis.from_url(settings.REDIS_URI)

@@ -16,6 +16,18 @@ convention = {
 
 
 class Base(DeclarativeBase):
+    """
+    Base class for SQLAlchemy models. Inherits from the SQLAlchemy declarative base class
+
+    Attributes:
+        __abstract__ (bool): Whether the class is abstract.
+        __name__ (str): The name of the class.
+        metadata (MetaData): The metadata for the class.
+        created_at (Mapped[datetime.datetime]): The created_at column for the class.
+        updated_at (Mapped[datetime.datetime]): The updated_at column for the class.
+
+    """
+
     __abstract__ = True
     __name__: str
 
@@ -29,6 +41,13 @@ class Base(DeclarativeBase):
     )
 
     def dict(self) -> Dict[str, Any]:
+        """
+        Convert the object to a dictionary.
+
+        Returns:
+            Dict[str, Any]: The dictionary representation of the object.
+
+        """
         return {
             k: v.isoformat() if isinstance(v, datetime.datetime) else v
             for k, v in self.__dict__.items()
@@ -36,10 +55,24 @@ class Base(DeclarativeBase):
         }
 
     def __repr__(self) -> str:
+        """
+        Convert the object to a JSON string.
+
+        Returns:
+            str: The JSON string representation of the object.
+
+        """
         return json.dumps(self.dict())
 
     # Generate __tablename__ automatically
     # pylint: disable=no-self-argument
     @declared_attr  # noqa: E301
     def __tablename__(cls) -> str:
+        """
+        Generate the table name automatically.
+
+        Returns:
+            str: The table name.
+
+        """
         return cls.__name__.lower()

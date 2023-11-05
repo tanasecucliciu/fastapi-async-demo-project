@@ -30,6 +30,18 @@ class Settings(BaseSettings):
     def assemble_db_async_uri(
         cls, value: Optional[str], values: Dict[str, Any]
     ) -> PostgresDsn:
+        """
+        Assemble the asynchronous PostgreSQL database URI.
+
+        Args:
+            cls: The class.
+            value (Optional[str]): The value of the DB_ASYNC_URI setting.
+            values (Dict[str, Any]): The values of all the settings.
+
+        Returns:
+            PostgresDsn: The assembled PostgreSQL DSN.
+
+        """
         if isinstance(value, str):
             return value
 
@@ -43,7 +55,21 @@ class Settings(BaseSettings):
 
     # pylint: disable=no-self-argument
     @validator("DB_URI", pre=True)
-    def assemble_db_uri(cls, value: Optional[str], values: Dict[str, Any]) -> PostgresDsn:
+    def assemble_db_sync_uri(
+        cls, value: Optional[str], values: Dict[str, Any]
+    ) -> PostgresDsn:
+        """
+        Assemble the synchronous PostgreSQL database URI.
+
+        Args:
+            cls: The class.
+            value (Optional[str]): The value of the DB_URI setting.
+            values (Dict[str, Any]): The values of all the settings.
+
+        Returns:
+            PostgresDsn: The assembled PostgreSQL DSN.
+
+        """
         if isinstance(value, str):
             return value
 
@@ -57,6 +83,18 @@ class Settings(BaseSettings):
 
     @validator('REDIS_URI', pre=True)
     def assemble_redis_uri(cls, value: Optional[str], values: Dict[str, Any]) -> str:
+        """
+        Assemble the Redis URI.
+
+        Args:
+            cls: The class.
+            value (Optional[str]): The value of the REDIS_URI setting.
+            values (Dict[str, Any]): The values of all the settings.
+
+        Returns:
+            str: The assembled Redis URI.
+
+        """
         if isinstance(value, str):
             return value
         return (

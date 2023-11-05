@@ -15,6 +15,16 @@ from app.db.session import (
 
 # Session generators
 def get_sync_db_session() -> Generator[Session, None, None]:
+    """
+    Returns a generator that yields a synchronous SQLAlchemy session.
+
+    Yields:
+        Generator[Session, None, None]: A synchronous SQLAlchemy session.
+
+    Raises:
+        SQLAlchemyError: If there is an error creating the session.
+
+    """
     try:
         session = sync_session_factory()
         yield session
@@ -25,6 +35,16 @@ def get_sync_db_session() -> Generator[Session, None, None]:
 
 
 async def get_async_db_session() -> AsyncGenerator[AsyncSession, None]:
+    """
+    Returns an asynchronous generator that yields an asynchronous SQLAlchemy session.
+
+    Yields:
+        AsyncGenerator[AsyncSession, None]: An asynchronous SQLAlchemy session.
+
+    Raises:
+        SQLAlchemyError: If there is an error creating the session.
+
+    """
     try:
         session = async_session_factory()
         yield session
@@ -34,7 +54,17 @@ async def get_async_db_session() -> AsyncGenerator[AsyncSession, None]:
         await session.close()
 
 
-async def get_async_redis_session() -> Generator[aioredis.Redis, None, None]:  # type: ignore
+async def get_async_redis_session() -> AsyncGenerator[aioredis.Redis, None]:  # type: ignore
+    """
+    Returns an asynchronous generator that yields an asynchronous Redis session.
+
+    Yields:
+        AsyncGenerator[aioredis.Redis, None]: An asynchronous Redis session.
+
+    Raises:
+        RedisError: If there is an error creating the session.
+
+    """
     try:
         session = await get_redis_session()
         yield session
